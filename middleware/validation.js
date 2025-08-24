@@ -69,34 +69,41 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Validation rules for transaction creation and updates - FIXED
+// FIXED: More strict transaction validation
 const validateTransaction = [
+  // Amount validation - must exist and be positive
   body('amount')
+    .exists({ checkFalsy: true })
+    .withMessage('Amount is required')
+    .isNumeric()
+    .withMessage('Amount must be a number')
     .isFloat({ min: 0.01 })
-    .withMessage('Amount must be a positive number greater than 0')
-    .custom((value) => {
-      if (value <= 0) {
-        throw new Error('Amount must be greater than 0');
-      }
-      return true;
-    }),
+    .withMessage('Amount must be greater than 0'),
 
+  // Type validation - must exist and be valid enum
   body('type')
+    .exists({ checkFalsy: true })
+    .withMessage('Transaction type is required')
     .isIn(['credit', 'debit'])
     .withMessage('Transaction type must be either credit or debit')
-    .customSanitizer((value) => value.toLowerCase()),
+    .customSanitizer((value) => value ? value.toLowerCase() : value),
 
+  // Description validation - must exist and not be empty
   body('description')
+    .exists({ checkFalsy: true })
+    .withMessage('Description is required')
     .trim()
     .isLength({ min: 1, max: 200 })
-    .withMessage('Description is required and must be between 1 and 200 characters'),
+    .withMessage('Description must be between 1 and 200 characters'),
 
+  // Category validation - optional but if provided, must be valid
   body('category')
     .optional()
     .trim()
     .isLength({ max: 50 })
     .withMessage('Category cannot be more than 50 characters'),
 
+  // Date validation - optional but if provided, must be valid
   body('date')
     .optional()
     .isISO8601()
