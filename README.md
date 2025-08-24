@@ -118,6 +118,7 @@ finance-tracker/
 - `GET /api/users/profile` - Get user profile (protected)
 - `PUT /api/users/profile` - Update user profile (protected)
 - `GET /api/users/balance` - Get user balance (protected)
+- `POST /api/users/balance` - Update user balance (protected)
 
 ### Transactions (to be implemented)
 
@@ -130,6 +131,305 @@ finance-tracker/
 
 - `GET /api/reports/summary` - Get financial summary (protected)
 - `GET /api/analytics/spending` - Get spending analytics (protected)
+
+## API Testing with Postman/Thunder Client
+
+### Base URL
+```
+http://localhost:3000/api
+```
+
+### Authentication Endpoints
+
+#### 1. User Registration
+**POST** `/auth/register`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (JSON):**
+```json
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "accountType": "tier 1",
+  "password": "SecurePass123"
+}
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "message": "User registered successfully",
+  "data": {
+    "user": {
+      "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "accountType": "tier 1",
+      "balance": 0,
+      "isActive": true,
+      "createdAt": "2023-09-06T10:30:00.000Z"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+#### 2. User Login
+**POST** `/auth/login`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (JSON):**
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "SecurePass123"
+}
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "accountType": "tier 1",
+      "balance": 0,
+      "isActive": true,
+      "createdAt": "2023-09-06T10:30:00.000Z"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+#### 3. Get User Profile (Protected)
+**GET** `/auth/profile`
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "accountType": "tier 1",
+      "balance": 0,
+      "isActive": true,
+      "createdAt": "2023-09-06T10:30:00.000Z"
+    }
+  }
+}
+```
+
+### User Management Endpoints
+
+#### 4. Get User Profile (Protected)
+**GET** `/users/profile`
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "accountType": "tier 1",
+      "balance": 0,
+      "isActive": true,
+      "createdAt": "2023-09-06T10:30:00.000Z"
+    }
+  }
+}
+```
+
+#### 5. Update User Profile (Protected)
+**PUT** `/users/profile`
+
+**Headers:**
+```
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Body (JSON):**
+```json
+{
+  "name": "John Smith",
+  "accountType": "tier 2"
+}
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "message": "Profile updated successfully",
+  "data": {
+    "user": {
+      "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "name": "John Smith",
+      "email": "john.doe@example.com",
+      "accountType": "tier 2",
+      "balance": 0,
+      "isActive": true,
+      "createdAt": "2023-09-06T10:30:00.000Z"
+    }
+  }
+}
+```
+
+#### 6. Get User Balance (Protected)
+**GET** `/users/balance`
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "data": {
+    "balance": 1500.50,
+    "user": {
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    }
+  }
+}
+```
+
+#### 7. Update User Balance (Protected)
+**POST** `/users/balance`
+
+**Headers:**
+```
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Body (JSON):**
+```json
+{
+  "amount": 500,
+  "type": "add"
+}
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "message": "Balance added successfully",
+  "data": {
+    "newBalance": 2000.50,
+    "change": 500
+  }
+}
+```
+
+### Testing Workflow
+
+1. **Start with Registration**: Use the registration endpoint to create a new user
+2. **Login**: Use the login endpoint to get a JWT token
+3. **Copy the Token**: From the login response, copy the `token` value
+4. **Set Authorization Header**: For all protected endpoints, add `Authorization: Bearer YOUR_TOKEN_HERE`
+5. **Test Protected Endpoints**: Use the token to test profile and balance endpoints
+
+### Common Error Responses
+
+#### Validation Error (400)
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "errors": [
+    {
+      "field": "email",
+      "message": "Please enter a valid email address"
+    }
+  ]
+}
+```
+
+#### Authentication Error (401)
+```json
+{
+  "success": false,
+  "message": "Invalid email or password"
+}
+```
+
+#### Unauthorized (401)
+```json
+{
+  "success": false,
+  "message": "Access denied. No token provided."
+}
+```
+
+#### Not Found (404)
+```json
+{
+  "success": false,
+  "message": "User not found"
+}
+```
+
+#### Server Error (500)
+```json
+{
+  "success": false,
+  "message": "Internal server error"
+}
+```
+
+### Postman Collection Setup
+
+1. **Create a new collection** named "Finance Tracker API"
+2. **Set base URL variable**: Create a variable `baseUrl` with value `http://localhost:3000/api`
+3. **Set token variable**: After login, set a variable `token` with the JWT token value
+4. **Use variables in requests**: 
+   - URL: `{{baseUrl}}/auth/login`
+   - Authorization: `Bearer {{token}}`
+
+### Thunder Client Setup
+
+1. **Create a new collection** named "Finance Tracker API"
+2. **Set environment variables**:
+   - `baseUrl`: `http://localhost:3000/api`
+   - `token`: (leave empty initially, will be set after login)
+3. **Use variables in requests**:
+   - URL: `{{baseUrl}}/auth/login`
+   - Authorization: `Bearer {{token}}`
 
 ## Security Features
 

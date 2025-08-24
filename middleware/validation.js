@@ -15,7 +15,7 @@ const validateRegistration = [
     .normalizeEmail(),
 
   body('accountType')
-    .isIn(['personal', 'business', 'savings'])
+    .isIn(['tier 1', 'tier 2', 'tier 3'])
     .withMessage('Account type must be personal, business, or savings'),
 
   body('password')
@@ -49,7 +49,7 @@ const validateProfileUpdate = [
 
   body('accountType')
     .optional()
-    .isIn(['personal', 'business', 'savings'])
+    .isIn(['tier 1', 'tier 2', 'tier 3'])
     .withMessage('Account type must be personal, business, or savings'),
 ];
 
