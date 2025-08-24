@@ -50,7 +50,9 @@ transactionSchema.index({ user: 1, category: 1 });
 
 // Virtual for formatted amount
 transactionSchema.virtual('formattedAmount').get(function () {
-  return this.type === 'credit' ? `+$${this.amount.toFixed(2)}` : `-$${this.amount.toFixed(2)}`;
+  return this.type === 'credit'
+    ? `+$${this.amount.toFixed(2)}`
+    : `-$${this.amount.toFixed(2)}`;
 });
 
 // Ensure virtual fields are serialized

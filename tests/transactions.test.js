@@ -20,7 +20,7 @@ describe('Transaction API Endpoints', () => {
         name: 'Test User',
         email: `test${Date.now()}@example.com`,
         password: 'TestPass123',
-        accountType: 'tier 1'
+        accountType: 'tier 1',
       });
 
     testUser = response.body.data.user;
@@ -33,23 +33,23 @@ describe('Transaction API Endpoints', () => {
         .post('/api/transactions')
         .set('Authorization', `Bearer ${authToken}`)
         .send({
-          amount: 100.50,
+          amount: 100.5,
           type: 'credit',
           description: 'Test credit',
-          category: 'Income'
+          category: 'Income',
         });
 
       expect(response.status).toBe(201);
       expect(response.body.success).toBe(true);
-      expect(response.body.data.transaction.amount).toBe(100.50);
+      expect(response.body.data.transaction.amount).toBe(100.5);
       expect(response.body.data.transaction.type).toBe('credit');
       expect(response.body.data.transaction.description).toBe('Test credit');
       expect(response.body.data.transaction.category).toBe('Income');
-      expect(response.body.data.newBalance).toBe(100.50);
+      expect(response.body.data.newBalance).toBe(100.5);
 
       // Verify user balance was updated
       const updatedUser = await User.findById(testUser._id);
-      expect(updatedUser.balance).toBe(100.50);
+      expect(updatedUser.balance).toBe(100.5);
     });
 
     it('should create a new debit transaction', async () => {
@@ -124,13 +124,11 @@ describe('Transaction API Endpoints', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .post('/api/transactions')
-        .send({
-          amount: 100,
-          type: 'credit',
-          description: 'No auth',
-        });
+      const response = await request(app).post('/api/transactions').send({
+        amount: 100,
+        type: 'credit',
+        description: 'No auth',
+      });
 
       expect(response.status).toBe(401);
     });
@@ -201,7 +199,7 @@ describe('Transaction API Endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.data.transactions).toHaveLength(2);
-      response.body.data.transactions.forEach(transaction => {
+      response.body.data.transactions.forEach((transaction) => {
         expect(transaction.type).toBe('credit');
       });
     });
@@ -226,8 +224,7 @@ describe('Transaction API Endpoints', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .get('/api/transactions');
+      const response = await request(app).get('/api/transactions');
 
       expect(response.status).toBe(401);
     });
@@ -331,7 +328,7 @@ describe('Transaction API Endpoints', () => {
         amount: 75,
         description: 'Updated description',
         category: 'Food', // Add category
-        type: 'debit' // Explicitly set type
+        type: 'debit', // Explicitly set type
       };
 
       const response = await request(app)
@@ -415,7 +412,7 @@ describe('Transaction API Endpoints', () => {
           amount: 100,
           type: 'credit',
           description: 'Income 1',
-          category: 'Salary'
+          category: 'Salary',
         });
 
       await request(app)
@@ -425,7 +422,7 @@ describe('Transaction API Endpoints', () => {
           amount: 50,
           type: 'debit',
           description: 'Expense 1',
-          category: 'Food'
+          category: 'Food',
         });
 
       await request(app)
@@ -435,7 +432,7 @@ describe('Transaction API Endpoints', () => {
           amount: 75,
           type: 'credit',
           description: 'Income 2',
-          category: 'Bonus'
+          category: 'Bonus',
         });
     });
 
@@ -444,8 +441,11 @@ describe('Transaction API Endpoints', () => {
       const allTrans = await request(app)
         .get('/api/transactions')
         .set('Authorization', `Bearer ${authToken}`);
-      
-      console.log('All transactions:', JSON.stringify(allTrans.body.data.transactions, null, 2));
+
+      console.log(
+        'All transactions:',
+        JSON.stringify(allTrans.body.data.transactions, null, 2)
+      );
 
       const response = await request(app)
         .get('/api/transactions/stats')

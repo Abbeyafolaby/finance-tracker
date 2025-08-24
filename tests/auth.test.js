@@ -2,13 +2,12 @@ import request from 'supertest';
 import app from '../app.js';
 import User from '../models/User.js';
 
-
 describe('Authentication Endpoints', () => {
   const testUser = {
     name: 'Test User',
     email: 'test@example.com',
     password: 'TestPass123',
-    accountType: 'tier 1'
+    accountType: 'tier 1',
   };
 
   beforeEach(async () => {

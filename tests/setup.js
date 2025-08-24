@@ -5,7 +5,10 @@ config();
 
 beforeAll(async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI_TEST || 'mongodb://localhost:27017/financetracker-test');
+    await mongoose.connect(
+      process.env.MONGODB_URI_TEST ||
+        'mongodb://localhost:27017/financetracker-test'
+    );
   } catch (error) {
     console.error('MongoDB connection error:', error);
   }

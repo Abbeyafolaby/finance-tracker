@@ -143,6 +143,7 @@ finance-tracker/
 ## API Testing with Postman/Thunder Client
 
 ### Base URL
+
 ```
 http://localhost:3000/api
 ```
@@ -150,14 +151,17 @@ http://localhost:3000/api
 ### Authentication Endpoints
 
 #### 1. User Registration
+
 **POST** `/auth/register`
 
 **Headers:**
+
 ```
 Content-Type: application/json
 ```
 
 **Body (JSON):**
+
 ```json
 {
   "name": "John Doe",
@@ -168,6 +172,7 @@ Content-Type: application/json
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -188,14 +193,17 @@ Content-Type: application/json
 ```
 
 #### 2. User Login
+
 **POST** `/auth/login`
 
 **Headers:**
+
 ```
 Content-Type: application/json
 ```
 
 **Body (JSON):**
+
 ```json
 {
   "email": "john.doe@example.com",
@@ -204,6 +212,7 @@ Content-Type: application/json
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -224,14 +233,17 @@ Content-Type: application/json
 ```
 
 #### 3. Get User Profile (Protected)
+
 **GET** `/auth/profile`
 
 **Headers:**
+
 ```
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -252,14 +264,17 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ### User Management Endpoints
 
 #### 4. Get User Profile (Protected)
+
 **GET** `/users/profile`
 
 **Headers:**
+
 ```
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -278,15 +293,18 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### 5. Update User Profile (Protected)
+
 **PUT** `/users/profile`
 
 **Headers:**
+
 ```
 Content-Type: application/json
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Body (JSON):**
+
 ```json
 {
   "name": "John Smith",
@@ -295,6 +313,7 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -314,19 +333,22 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### 6. Get User Balance (Protected)
+
 **GET** `/users/balance`
 
 **Headers:**
+
 ```
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
   "data": {
-    "balance": 1500.50,
+    "balance": 1500.5,
     "user": {
       "name": "John Doe",
       "email": "john.doe@example.com"
@@ -336,15 +358,18 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### 7. Update User Balance (Protected)
+
 **POST** `/users/balance`
 
 **Headers:**
+
 ```
 Content-Type: application/json
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Body (JSON):**
+
 ```json
 {
   "amount": 500,
@@ -353,12 +378,13 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
   "message": "Balance added successfully",
   "data": {
-    "newBalance": 2000.50,
+    "newBalance": 2000.5,
     "change": 500
   }
 }
@@ -367,15 +393,18 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ### Transaction Endpoints
 
 #### 8. Create Transaction (Protected)
+
 **POST** `/transactions`
 
 **Headers:**
+
 ```
 Content-Type: application/json
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Body (JSON):**
+
 ```json
 {
   "amount": 150.75,
@@ -387,6 +416,7 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -409,9 +439,11 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### 9. Get All Transactions (Protected)
+
 **GET** `/transactions`
 
 **Query Parameters:**
+
 - `page` (optional): Page number for pagination (default: 1)
 - `limit` (optional): Items per page (default: 10)
 - `type` (optional): Filter by transaction type (credit/debit)
@@ -422,11 +454,13 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 - `sortOrder` (optional): Sort order (asc/desc, default: desc)
 
 **Headers:**
+
 ```
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -461,14 +495,17 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### 10. Get Specific Transaction (Protected)
+
 **GET** `/transactions/:id`
 
 **Headers:**
+
 ```
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -491,18 +528,21 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### 11. Update Transaction (Protected)
+
 **PUT** `/transactions/:id`
 
 **Headers:**
+
 ```
 Content-Type: application/json
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Body (JSON):**
+
 ```json
 {
-  "amount": 175.50,
+  "amount": 175.5,
   "type": "debit",
   "description": "Updated grocery shopping",
   "category": "Food & Beverages"
@@ -510,6 +550,7 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -517,26 +558,29 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
   "data": {
     "transaction": {
       "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
-      "amount": 175.50,
+      "amount": 175.5,
       "type": "debit",
       "description": "Updated grocery shopping",
       "category": "Food & Beverages",
-      "balanceAfter": 824.50
+      "balanceAfter": 824.5
     },
-    "newBalance": 824.50
+    "newBalance": 824.5
   }
 }
 ```
 
 #### 12. Delete Transaction (Protected)
+
 **DELETE** `/transactions/:id`
 
 **Headers:**
+
 ```
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
@@ -544,49 +588,53 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
   "data": {
     "deletedTransaction": {
       "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
-      "amount": 175.50,
+      "amount": 175.5,
       "type": "debit",
       "description": "Updated grocery shopping"
     },
-    "newBalance": 1000.00
+    "newBalance": 1000.0
   }
 }
 ```
 
 #### 13. Get Transaction Statistics (Protected)
+
 **GET** `/transactions/stats`
 
 **Query Parameters:**
+
 - `startDate` (optional): Start date for statistics (ISO format)
 - `endDate` (optional): End date for statistics (ISO format)
 
 **Headers:**
+
 ```
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 **Response Example:**
+
 ```json
 {
   "success": true,
   "data": {
     "summary": {
       "totalTransactions": 25,
-      "totalCredit": 5000.00,
+      "totalCredit": 5000.0,
       "totalDebit": 3250.75,
       "netAmount": 1749.25,
-      "averageAmount": 200.00
+      "averageAmount": 200.0
     },
     "categoryBreakdown": [
       {
         "_id": "Food",
         "count": 8,
-        "totalAmount": 1200.50
+        "totalAmount": 1200.5
       },
       {
         "_id": "Transportation",
         "count": 5,
-        "totalAmount": 450.00
+        "totalAmount": 450.0
       }
     ],
     "monthlyBreakdown": [
@@ -596,8 +644,8 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
           "month": 1
         },
         "count": 15,
-        "totalCredit": 3000.00,
-        "totalDebit": 2000.00
+        "totalCredit": 3000.0,
+        "totalDebit": 2000.0
       }
     ]
   }
@@ -615,6 +663,7 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ### Common Error Responses
 
 #### Validation Error (400)
+
 ```json
 {
   "success": false,
@@ -629,6 +678,7 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### Authentication Error (401)
+
 ```json
 {
   "success": false,
@@ -637,6 +687,7 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### Unauthorized (401)
+
 ```json
 {
   "success": false,
@@ -645,6 +696,7 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### Not Found (404)
+
 ```json
 {
   "success": false,
@@ -653,6 +705,7 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 ```
 
 #### Server Error (500)
+
 ```json
 {
   "success": false,
@@ -665,7 +718,7 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 1. **Create a new collection** named "Finance Tracker API"
 2. **Set base URL variable**: Create a variable `baseUrl` with value `http://localhost:3000/api`
 3. **Set token variable**: After login, set a variable `token` with the JWT token value
-4. **Use variables in requests**: 
+4. **Use variables in requests**:
    - URL: `{{baseUrl}}/auth/login`
    - Authorization: `Bearer {{token}}`
 

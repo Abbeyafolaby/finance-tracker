@@ -8,9 +8,7 @@ connectDB();
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Finance Tracker server running on port http://localhost:${PORT}`);
+  console.log(
+    `🚀 Finance Tracker server running on port http://localhost:${PORT}`
+  );
 });
-
-
-
-

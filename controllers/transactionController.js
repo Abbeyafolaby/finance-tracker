@@ -77,15 +77,15 @@ export const getTransactions = async (req, res) => {
 
     // Build filter object
     const filter = { user: userId };
-    
+
     if (type) {
       filter.type = type.toLowerCase();
     }
-    
+
     if (category) {
       filter.category = { $regex: category, $options: 'i' };
     }
-    
+
     if (startDate || endDate) {
       filter.date = {};
       if (startDate) {
@@ -207,14 +207,14 @@ export const updateTransaction = async (req, res) => {
 
     // Calculate balance adjustment
     let balanceAdjustment = 0;
-    
+
     // Remove old transaction effect
     if (transaction.type === 'credit') {
       balanceAdjustment -= transaction.amount;
     } else {
       balanceAdjustment += transaction.amount;
     }
-    
+
     // Add new transaction effect
     if (type === 'credit') {
       balanceAdjustment += amount;
@@ -360,7 +360,8 @@ export const getStats = async (req, res, next) => {
       averageAmount: 0,
     };
 
-    const netAmount = (summaryData.totalCredit || 0) - (summaryData.totalDebit || 0);
+    const netAmount =
+      (summaryData.totalCredit || 0) - (summaryData.totalDebit || 0);
 
     // Category breakdown
     const categoryAgg = await Transaction.aggregate([
@@ -436,18 +437,27 @@ export const getTransactionById = async (req, res, next) => {
     const { id } = req.params;
 
     if (!mongoose.isValidObjectId(id)) {
-      return res.status(400).json({ success: false, message: 'Invalid transaction ID' });
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid transaction ID' });
     }
 
-    const transaction = await Transaction.findById(id).populate('user', 'name email');
+    const transaction = await Transaction.findById(id).populate(
+      'user',
+      'name email'
+    );
 
     if (!transaction) {
-      return res.status(404).json({ success: false, message: 'Transaction not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Transaction not found' });
     }
 
     // Ensure the authenticated user owns the transaction
     if (transaction.user._id.toString() !== req.user._id.toString()) {
-      return res.status(404).json({ success: false, message: 'Transaction not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Transaction not found' });
     }
 
     return res.json({ success: true, data: transaction });
