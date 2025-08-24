@@ -23,6 +23,12 @@ Finance Tracker is a web application designed to help individuals manage their p
   - Categorize transactions (Food, Transportation, Entertainment, etc.)
   - Add transaction descriptions and notes
   - Support for recurring transactions
+  - **Advanced Features**:
+    - Pagination and filtering (by type, category, date range)
+    - Sorting capabilities (by amount, date, etc.)
+    - Transaction statistics and analytics
+    - Category breakdown and monthly summaries
+    - Automatic balance adjustment after each transaction
 
 - **User Experience**
   - Responsive design for mobile and desktop
@@ -120,12 +126,14 @@ finance-tracker/
 - `GET /api/users/balance` - Get user balance (protected)
 - `POST /api/users/balance` - Update user balance (protected)
 
-### Transactions (to be implemented)
+### Transactions
 
-- `GET /api/transactions` - Get all transactions (protected)
+- `GET /api/transactions` - Get all transactions with pagination & filtering (protected)
 - `POST /api/transactions` - Create new transaction (protected)
+- `GET /api/transactions/:id` - Get specific transaction (protected)
 - `PUT /api/transactions/:id` - Update transaction (protected)
 - `DELETE /api/transactions/:id` - Delete transaction (protected)
+- `GET /api/transactions/stats` - Get transaction statistics (protected)
 
 ### Reports (to be implemented)
 
@@ -356,6 +364,246 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 }
 ```
 
+### Transaction Endpoints
+
+#### 8. Create Transaction (Protected)
+**POST** `/transactions`
+
+**Headers:**
+```
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Body (JSON):**
+```json
+{
+  "amount": 150.75,
+  "type": "debit",
+  "description": "Grocery shopping",
+  "category": "Food",
+  "date": "2024-01-15T10:30:00.000Z"
+}
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "message": "Transaction created successfully",
+  "data": {
+    "transaction": {
+      "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "user": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "amount": 150.75,
+      "type": "debit",
+      "description": "Grocery shopping",
+      "category": "Food",
+      "date": "2024-01-15T10:30:00.000Z",
+      "balanceAfter": 849.25,
+      "createdAt": "2024-01-15T10:30:00.000Z"
+    },
+    "newBalance": 849.25
+  }
+}
+```
+
+#### 9. Get All Transactions (Protected)
+**GET** `/transactions`
+
+**Query Parameters:**
+- `page` (optional): Page number for pagination (default: 1)
+- `limit` (optional): Items per page (default: 10)
+- `type` (optional): Filter by transaction type (credit/debit)
+- `category` (optional): Filter by category
+- `startDate` (optional): Filter transactions from this date (ISO format)
+- `endDate` (optional): Filter transactions until this date (ISO format)
+- `sortBy` (optional): Sort field (default: date)
+- `sortOrder` (optional): Sort order (asc/desc, default: desc)
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "data": {
+    "transactions": [
+      {
+        "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+        "user": {
+          "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+          "name": "John Doe",
+          "email": "john.doe@example.com"
+        },
+        "amount": 150.75,
+        "type": "debit",
+        "description": "Grocery shopping",
+        "category": "Food",
+        "date": "2024-01-15T10:30:00.000Z",
+        "balanceAfter": 849.25,
+        "formattedAmount": "-$150.75"
+      }
+    ],
+    "pagination": {
+      "currentPage": 1,
+      "totalPages": 5,
+      "totalItems": 50,
+      "itemsPerPage": 10,
+      "hasNextPage": true,
+      "hasPrevPage": false
+    }
+  }
+}
+```
+
+#### 10. Get Specific Transaction (Protected)
+**GET** `/transactions/:id`
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+    "user": {
+      "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    },
+    "amount": 150.75,
+    "type": "debit",
+    "description": "Grocery shopping",
+    "category": "Food",
+    "date": "2024-01-15T10:30:00.000Z",
+    "balanceAfter": 849.25,
+    "formattedAmount": "-$150.75"
+  }
+}
+```
+
+#### 11. Update Transaction (Protected)
+**PUT** `/transactions/:id`
+
+**Headers:**
+```
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Body (JSON):**
+```json
+{
+  "amount": 175.50,
+  "type": "debit",
+  "description": "Updated grocery shopping",
+  "category": "Food & Beverages"
+}
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "message": "Transaction updated successfully",
+  "data": {
+    "transaction": {
+      "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "amount": 175.50,
+      "type": "debit",
+      "description": "Updated grocery shopping",
+      "category": "Food & Beverages",
+      "balanceAfter": 824.50
+    },
+    "newBalance": 824.50
+  }
+}
+```
+
+#### 12. Delete Transaction (Protected)
+**DELETE** `/transactions/:id`
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "message": "Transaction deleted successfully",
+  "data": {
+    "deletedTransaction": {
+      "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+      "amount": 175.50,
+      "type": "debit",
+      "description": "Updated grocery shopping"
+    },
+    "newBalance": 1000.00
+  }
+}
+```
+
+#### 13. Get Transaction Statistics (Protected)
+**GET** `/transactions/stats`
+
+**Query Parameters:**
+- `startDate` (optional): Start date for statistics (ISO format)
+- `endDate` (optional): End date for statistics (ISO format)
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "data": {
+    "summary": {
+      "totalTransactions": 25,
+      "totalCredit": 5000.00,
+      "totalDebit": 3250.75,
+      "netAmount": 1749.25,
+      "averageAmount": 200.00
+    },
+    "categoryBreakdown": [
+      {
+        "_id": "Food",
+        "count": 8,
+        "totalAmount": 1200.50
+      },
+      {
+        "_id": "Transportation",
+        "count": 5,
+        "totalAmount": 450.00
+      }
+    ],
+    "monthlyBreakdown": [
+      {
+        "_id": {
+          "year": 2024,
+          "month": 1
+        },
+        "count": 15,
+        "totalCredit": 3000.00,
+        "totalDebit": 2000.00
+      }
+    ]
+  }
+}
+```
+
 ### Testing Workflow
 
 1. **Start with Registration**: Use the registration endpoint to create a new user
@@ -436,9 +684,12 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 - **Password Security**: All passwords are hashed using bcrypt before storage
 - **JWT Authentication**: Secure token-based authentication for protected routes
 - **Input Validation**: Comprehensive validation using express-validator
-- **Security Headers**: Helmet.js for security headers
-- **Rate Limiting**: Protection against brute force attacks
+- **Security Headers**: Helmet.js for HTTP security headers
+- **Rate Limiting**: Protection against brute force attacks and abuse
 - **CORS**: Configurable Cross-Origin Resource Sharing
+- **Input Sanitization**: XSS protection and injection attack prevention
+- **Data Validation**: Amount must be positive, type must be credit/debit
+- **Automatic Balance Management**: Secure balance updates after each transaction
 
 ## Development Guidelines
 

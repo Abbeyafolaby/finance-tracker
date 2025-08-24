@@ -16,7 +16,7 @@ const validateRegistration = [
 
   body('accountType')
     .isIn(['tier 1', 'tier 2', 'tier 3'])
-    .withMessage('Account type must be personal, business, or savings'),
+    .withMessage('Account type must be tier 1, tier 2, or tier 3'),
 
   body('password')
     .isLength({ min: 6 })
@@ -50,7 +50,7 @@ const validateProfileUpdate = [
   body('accountType')
     .optional()
     .isIn(['tier 1', 'tier 2', 'tier 3'])
-    .withMessage('Account type must be personal, business, or savings'),
+    .withMessage('Account type must be tier 1, tier 2, or tier 3'),
 ];
 
 // Middleware to check for validation errors
@@ -69,9 +69,44 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
+// Validation rules for transaction creation and updates
+const validateTransaction = [
+  body('amount')
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number greater than 0')
+    .custom((value) => {
+      if (value <= 0) {
+        throw new Error('Amount must be greater than 0');
+      }
+      return true;
+    }),
+
+  body('type')
+    .isIn(['credit', 'debit'])
+    .withMessage('Transaction type must be either credit or debit')
+    .toLowerCase(),
+
+  body('description')
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage('Description must be between 1 and 200 characters'),
+
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Category cannot be more than 50 characters'),
+
+  body('date')
+    .optional()
+    .isISO8601()
+    .withMessage('Date must be a valid ISO 8601 date format'),
+];
+
 export {
   validateRegistration,
   validateLogin,
   validateProfileUpdate,
+  validateTransaction,
   handleValidationErrors,
 };

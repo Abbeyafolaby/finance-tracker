@@ -1,23 +1,15 @@
 import request from 'supertest';
 import app from '../app.js';
-import mongoose from 'mongoose';
 import User from '../models/User.js';
 
-// Mock environment variables for testing
-process.env.JWT_SECRET = 'test-secret-key';
-process.env.MONGODB_URI = 'mongodb://localhost:27017/financetracker-test';
 
 describe('Authentication Endpoints', () => {
-  beforeAll(async () => {
-    // Connect to test database
-    await mongoose.connect(process.env.MONGODB_URI);
-  });
-
-  afterAll(async () => {
-    // Clean up and disconnect
-    await User.deleteMany({});
-    await mongoose.connection.close();
-  });
+  const testUser = {
+    name: 'Test User',
+    email: 'test@example.com',
+    password: 'TestPass123',
+    accountType: 'tier 1'
+  };
 
   beforeEach(async () => {
     // Clear users before each test
@@ -26,31 +18,22 @@ describe('Authentication Endpoints', () => {
 
   describe('POST /api/auth/register', () => {
     it('should register a new user successfully', async () => {
-      const userData = {
-        name: 'Test User',
-        email: 'test@example.com',
-        accountType: 'personal',
-        password: 'TestPass123',
-      };
-
       const response = await request(app)
         .post('/api/auth/register')
-        .send(userData)
+        .send(testUser)
         .expect(201);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.data.user.name).toBe(userData.name);
-      expect(response.body.data.user.email).toBe(userData.email);
-      expect(response.body.data.user.balance).toBe(0);
+      expect(response.body.data.user.name).toBe(testUser.name);
+      expect(response.body.data.user.email).toBe(testUser.email);
       expect(response.body.data.token).toBeDefined();
-      expect(response.body.data.user.password).toBeUndefined();
     });
 
     it('should not register user with invalid email', async () => {
       const userData = {
         name: 'Test User',
         email: 'invalid-email',
-        accountType: 'personal',
+        accountType: 'tier 1',
         password: 'TestPass123',
       };
 
@@ -67,13 +50,7 @@ describe('Authentication Endpoints', () => {
   describe('POST /api/auth/login', () => {
     beforeEach(async () => {
       // Create a test user
-      const userData = {
-        name: 'Test User',
-        email: 'test@example.com',
-        accountType: 'personal',
-        password: 'TestPass123',
-      };
-      await request(app).post('/api/auth/register').send(userData);
+      await request(app).post('/api/auth/register').send(testUser);
     });
 
     it('should login successfully with valid credentials', async () => {

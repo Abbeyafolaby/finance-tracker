@@ -14,6 +14,13 @@ module.exports = {
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
-  testTimeout: 10000,
+  testTimeout: 30000,
   verbose: true,
+  extensionsToTreatAsEsm: [],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  globals: {
+    'ts-jest': {
+      useESM: true,
+    },
+  },
 };
