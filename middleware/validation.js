@@ -69,7 +69,7 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Validation rules for transaction creation and updates
+// Validation rules for transaction creation and updates - FIXED
 const validateTransaction = [
   body('amount')
     .isFloat({ min: 0.01 })
@@ -84,12 +84,12 @@ const validateTransaction = [
   body('type')
     .isIn(['credit', 'debit'])
     .withMessage('Transaction type must be either credit or debit')
-    .toLowerCase(),
+    .customSanitizer((value) => value.toLowerCase()),
 
   body('description')
     .trim()
     .isLength({ min: 1, max: 200 })
-    .withMessage('Description must be between 1 and 200 characters'),
+    .withMessage('Description is required and must be between 1 and 200 characters'),
 
   body('category')
     .optional()
